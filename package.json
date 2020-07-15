@@ -9,7 +9,7 @@
     "mosaic": "./mosaic-cli.mjs"
   },
   "scripts": {
-    "update-platforms": "npm install --save github:wazybr/mosaic-web && npm install --save github:wazybr/mosaic-linux"
+    "update-platforms": "npm install --save github:wazybr/mosaic-web"
   },
   "repository": {
     "type": "git",
