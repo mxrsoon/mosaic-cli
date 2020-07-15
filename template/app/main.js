@@ -1,6 +1,6 @@
-import { Application } from "mosaic/core/index.js";
-import { View } from "mosaic/core/index.js";
-import { AppBar, Text } from "mosaic/widgets/index.js";
+import { Application } from "@mosaic/core/index.js";
+import { View } from "@mosaic/core/index.js";
+import { AppBar, Text } from "@mosaic/widgets/index.js";
 
 export const app = new Application({
 	view: new View({
