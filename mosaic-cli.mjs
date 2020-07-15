@@ -90,7 +90,8 @@ async function build(args) {
 				out: path.resolve(process.cwd(), "out", platform),
 				app: appPath,
 				mosaic: mosaicPath,
-				lib: libPath
+				lib: libPath,
+				manifest: manifest
 			});
 
 			console.log(`Built for platform '${platform}' at '${outputPath}'`);
