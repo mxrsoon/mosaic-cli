@@ -123,6 +123,49 @@ async function create(args) {
 	}
 }
 
+async function run(args) {
+	if (args.length > 0) {
+		const platform = args[0].toLowerCase();
+
+		let manifest;
+		const manifestPath = path.resolve(process.cwd(), "mosaic.json");
+
+		try {
+			manifest = await fs.readJSON(manifestPath, { throws: true });
+		} catch (e) {
+			throw new SoftError("Unable to read mosaic.json in the current working directory");
+		}
+
+		if (!(platform in platforms)) {
+			throw new SoftError(`Unknown platform '${platform}'`);
+		}
+
+		if (!manifest.platforms.includes(platform)) {
+			throw new SoftError("Platform not added to the project, use 'mosaic platform add <platform_name>' to add it");
+		}
+
+		const outPath = path.resolve(process.cwd(), "out", platform);
+		let outItems;
+
+		try {
+			outItems = await fs.readdir(outPath);
+		} catch (e) {
+			throw new SoftError("Couldn't read output directory. Did you forget to build for the platform?");
+		}
+
+		if (outItems.length === 0) {
+			throw new SoftError("Output directory is empty. Did you forget to build for the platform?");
+		}
+
+		await platforms[platform].run({
+			out: outDir,
+			manifest: manifest
+		});
+	} else {
+		throw new SoftError("You must specify a platform to run");
+	}
+}
+
 function generateManifest(name) {
 	return {
 		name: name,
@@ -148,7 +191,11 @@ async function main() {
 
 				case "build": {
 					await build(args.slice(1));
-				}
+				} break;
+
+				case "run": {
+					await run(args.slice(1));
+				} break;
 			}
 		} else {
 			throw new SoftError("You must specify a command");
