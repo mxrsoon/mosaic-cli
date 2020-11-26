@@ -11,11 +11,11 @@ const platforms = {
 	web: mosaicWeb
 };
 
-async function platform(args) {
+async function platform(args, options) {
     if (args.length > 0) {
 		switch (args[0]) {
 			case "add": {
-				await platformAdd(args.slice(1));
+				await platformAdd(args.slice(1), options);
 			} break;
 
 			default: {
@@ -27,7 +27,7 @@ async function platform(args) {
 	}
 }
 
-async function platformAdd(args) {
+async function platformAdd(args, options) {
 	if (args.length > 0) {
 		const platform = args[0].toLowerCase();
 		const manifestPath = path.resolve(process.cwd(), "mosaic.json");
@@ -54,7 +54,7 @@ async function platformAdd(args) {
 	}
 }
 
-async function build(args) {
+async function build(args, options) {
 	let manifest;
 	const manifestPath = path.resolve(process.cwd(), "mosaic.json");
 
@@ -91,7 +91,9 @@ async function build(args) {
 				app: appPath,
 				mosaic: mosaicPath,
 				lib: libPath,
-				manifest: manifest
+				manifest: manifest,
+				args: args.slice(1),
+				cliOptions: options
 			});
 
 			console.log(`Built for platform '${platform}' at '${outputPath}'`);
@@ -101,7 +103,7 @@ async function build(args) {
 	}
 }
 
-async function create(args) {
+async function create(args, options) {
 	if (args.length > 0) {
 		const outDir = path.resolve(process.cwd(), args[0]);
 		const manifestDir = path.resolve(outDir, "mosaic.json");
@@ -123,7 +125,7 @@ async function create(args) {
 	}
 }
 
-async function run(args) {
+async function run(args, options) {
 	if (args.length > 0) {
 		const platform = args[0].toLowerCase();
 
@@ -160,7 +162,8 @@ async function run(args) {
 		await platforms[platform].run({
 			out: outDir,
 			manifest: manifest,
-			args: args.slice(1)
+			args: args.slice(1),
+			cliOptions: options
 		});
 	} else {
 		throw new SoftError("You must specify a platform to run");
@@ -176,26 +179,29 @@ function generateManifest(name) {
 }
 
 async function main() {
-	const args = minimist(process.argv.slice(2))["_"];
+	const options = minimist(process.argv.slice(2));
+	const args = options["_"];
+
+	delete options["_"];
 
 	try {
 		if (args.length > 0) {
 			switch (args[0]) {
 				case "create": {
-					await create(args.slice(1));
+					await create(args.slice(1), options);
 				} break;
 
 				case "platform":
 				case "plat": {
-					await platform(args.slice(1));
+					await platform(args.slice(1), options);
 				} break;
 
 				case "build": {
-					await build(args.slice(1));
+					await build(args.slice(1), options);
 				} break;
 
 				case "run": {
-					await run(args.slice(1));
+					await run(args.slice(1), options);
 				} break;
 			}
 		} else {
