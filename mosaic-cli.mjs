@@ -159,7 +159,8 @@ async function run(args) {
 
 		await platforms[platform].run({
 			out: outDir,
-			manifest: manifest
+			manifest: manifest,
+			args: args.slice(1)
 		});
 	} else {
 		throw new SoftError("You must specify a platform to run");
