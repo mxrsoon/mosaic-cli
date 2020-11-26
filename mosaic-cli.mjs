@@ -160,7 +160,7 @@ async function run(args, options) {
 		}
 
 		await platforms[platform].run({
-			out: outDir,
+			out: outPath,
 			manifest: manifest,
 			args: args.slice(1),
 			cliOptions: options
