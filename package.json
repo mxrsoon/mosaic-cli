@@ -23,7 +23,7 @@
   "homepage": "https://github.com/wazybr/mosaic-cli#readme",
   "dependencies": {
     "fs-extra": "^9.0.1",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "mosaic-web": "github:wazybr/mosaic-web"
   }
 }
